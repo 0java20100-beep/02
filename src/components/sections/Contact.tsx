@@ -30,7 +30,7 @@ export default function Contact() {
             <div className="flex h-full flex-col gap-6">
               <div className="grid gap-4 sm:grid-cols-2">
                 <a
-                  href="https://t.me/watermelontravel"
+                  href="https://t.me/watermelon_travel"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group flex items-center gap-4 rounded-2xl border border-ink-900/5 bg-white p-5 shadow-soft transition-all hover:-translate-y-1 hover:shadow-card"
@@ -42,11 +42,11 @@ export default function Contact() {
                     <p className="text-xs uppercase tracking-wide text-ink-800/50">
                       {dict.contact.telegram}
                     </p>
-                    <p className="font-semibold text-ink-900">@watermelontravel</p>
+                    <p className="font-semibold text-ink-900">@watermelon_travel</p>
                   </div>
                 </a>
                 <a
-                  href="https://instagram.com/watermelontravel"
+                  href="https://instagram.com/watermelon_travel1"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group flex items-center gap-4 rounded-2xl border border-ink-900/5 bg-white p-5 shadow-soft transition-all hover:-translate-y-1 hover:shadow-card"
@@ -58,7 +58,7 @@ export default function Contact() {
                     <p className="text-xs uppercase tracking-wide text-ink-800/50">
                       {dict.contact.instagram}
                     </p>
-                    <p className="font-semibold text-ink-900">@watermelontravel</p>
+                    <p className="font-semibold text-ink-900">@watermelon_travel1</p>
                   </div>
                 </a>
                 <div className="flex items-center gap-4 rounded-2xl border border-ink-900/5 bg-white p-5 shadow-soft">

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -49,10 +50,14 @@ export default function Header() {
     >
       <div className="container-px mx-auto flex max-w-7xl items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-2.5" aria-label="Watermelon Travel home">
-          <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-watermelon-gradient shadow-glow">
-            <span className="h-4 w-4 rounded-full bg-white/90" />
-            <span className="absolute h-1.5 w-1.5 rounded-full bg-leaf-500" />
-          </span>
+          <Image
+            src="/logo.png"
+            alt="Watermelon Travel"
+            width={40}
+            height={40}
+            priority
+            className="h-10 w-10 rounded-full object-cover"
+          />
           <span
             className={cn(
               "font-display text-lg font-semibold tracking-tight transition-colors",
@@ -132,7 +137,14 @@ export default function Header() {
               className="absolute right-0 top-0 flex h-full w-[82%] max-w-sm flex-col bg-white p-6 shadow-2xl"
             >
               <div className="flex items-center justify-between">
-                <span className="font-display text-lg font-semibold text-ink-950">
+                <span className="flex items-center gap-2.5 font-display text-lg font-semibold text-ink-950">
+                  <Image
+                    src="/logo.png"
+                    alt="Watermelon Travel"
+                    width={36}
+                    height={36}
+                    className="h-9 w-9 rounded-full object-cover"
+                  />
                   Watermelon<span className="text-watermelon-500">.</span>
                 </span>
                 <button

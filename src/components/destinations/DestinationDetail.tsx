@@ -277,7 +277,7 @@ export default function DestinationDetail({ id }: { id: string }) {
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <a
-                href="https://t.me/watermelontravel"
+                href="https://t.me/watermelon_travel"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-outline mt-3 w-full justify-center"

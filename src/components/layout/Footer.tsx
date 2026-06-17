@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { InstagramIcon, TelegramIcon } from "@/components/ui/BrandIcons";
@@ -23,10 +24,13 @@ export default function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr]">
           <div>
             <Link href="/" className="flex items-center gap-2.5">
-              <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-watermelon-gradient shadow-glow">
-                <span className="h-4 w-4 rounded-full bg-white/90" />
-                <span className="absolute h-1.5 w-1.5 rounded-full bg-leaf-500" />
-              </span>
+              <Image
+                src="/logo.png"
+                alt="Watermelon Travel"
+                width={40}
+                height={40}
+                className="h-10 w-10 rounded-full bg-white object-cover"
+              />
               <span className="font-display text-lg font-semibold">
                 Watermelon<span className="text-watermelon-500">.</span>
               </span>
@@ -36,7 +40,7 @@ export default function Footer() {
             </p>
             <div className="mt-6 flex items-center gap-3">
               <a
-                href="https://t.me/watermelontravel"
+                href="https://t.me/watermelon_travel"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Telegram"
@@ -45,7 +49,7 @@ export default function Footer() {
                 <TelegramIcon className="h-5 w-5" />
               </a>
               <a
-                href="https://instagram.com/watermelontravel"
+                href="https://instagram.com/watermelon_travel1"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -126,14 +130,14 @@ export default function Footer() {
             <ul className="mt-6 space-y-3 text-sm text-white/60">
               <li className="flex items-center gap-2.5">
                 <TelegramIcon className="h-4 w-4 text-watermelon-400" />
-                <a href="https://t.me/watermelontravel" className="hover:text-white">
-                  @watermelontravel
+                <a href="https://t.me/watermelon_travel" className="hover:text-white">
+                  @watermelon_travel
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
                 <InstagramIcon className="h-4 w-4 text-watermelon-400" />
-                <a href="https://instagram.com/watermelontravel" className="hover:text-white">
-                  @watermelontravel
+                <a href="https://instagram.com/watermelon_travel1" className="hover:text-white">
+                  @watermelon_travel1
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
