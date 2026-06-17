@@ -62,8 +62,8 @@ export default function Hero() {
             />
           </motion.div>
         </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-b from-ink-950/70 via-ink-950/45 to-ink-950/85" />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink-950/70 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink-950/55 via-ink-950/25 to-ink-950/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink-950/75 via-ink-950/20 to-transparent" />
       </div>
 
       <div className="container-px relative z-10 mx-auto w-full max-w-7xl pt-28">
@@ -168,7 +168,7 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.7 }}
             className="mt-8 flex flex-wrap items-center gap-4"
           >
-            <Link href="/destinations" className="btn btn-outline border-white/40 text-white hover:bg-white/10">
+            <Link href="/destinations" className="btn btn-ghost">
               {dict.hero.exploreButton}
             </Link>
             <div className="flex items-center gap-3 text-sm text-white/70">
