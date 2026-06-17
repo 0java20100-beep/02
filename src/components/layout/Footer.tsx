@@ -138,7 +138,15 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="h-4 w-4 text-watermelon-400" />
-                <span>{dict.contact.phonePlaceholder}</span>
+                <a href="tel:+998905009012" className="hover:text-white">
+                  +998 90 500 90 12
+                </a>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Phone className="h-4 w-4 text-watermelon-400" />
+                <a href="tel:+998990075006" className="hover:text-white">
+                  +998 99 007 50 06
+                </a>
               </li>
               <li className="flex items-center gap-2.5">
                 <MapPin className="h-4 w-4 text-watermelon-400" />

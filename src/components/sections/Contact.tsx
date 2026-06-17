@@ -69,7 +69,12 @@ export default function Contact() {
                     <p className="text-xs uppercase tracking-wide text-ink-800/50">
                       {dict.contact.phone}
                     </p>
-                    <p className="font-semibold text-ink-900">{dict.contact.phonePlaceholder}</p>
+                    <a href="tel:+998905009012" className="block font-semibold text-ink-900 hover:text-watermelon-600">
+                      +998 90 500 90 12
+                    </a>
+                    <a href="tel:+998990075006" className="block font-semibold text-ink-900 hover:text-watermelon-600">
+                      +998 99 007 50 06
+                    </a>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 rounded-2xl border border-ink-900/5 bg-white p-5 shadow-soft">
