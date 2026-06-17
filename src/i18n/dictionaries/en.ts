@@ -220,7 +220,7 @@ const en = {
     recentBookings: "Recent Bookings",
     monthlyRevenue: "Monthly Revenue",
     bookingsByRegion: "Bookings by Region",
-    hint: "Demo credentials: admin / watermelon",
+    hint: "Demo credentials: admin / WatermelonTravel-2026",
   },
 };
 

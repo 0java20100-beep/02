@@ -20,7 +20,7 @@ export default function AdminLogin({
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (username === "admin" && password === "watermelon") {
+    if (username === "admin" && password === "WatermelonTravel-2026") {
       onSuccess();
     } else {
       setError(true);

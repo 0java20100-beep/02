@@ -32,10 +32,10 @@ export default function Payment() {
                   <span className="text-xs uppercase tracking-widest text-white/50">Watermelon</span>
                 </div>
                 <p className="mt-6 font-display text-lg tracking-[0.2em] text-white/90">
-                  •••• •••• •••• ••••
+                  4790 9122 5923 8246
                 </p>
                 <div className="mt-4 flex items-center justify-between text-xs text-white/50">
-                  <span>{dict.payment.cardPlaceholder}</span>
+                  <span>Watermelon Travel</span>
                   <span>••/••</span>
                 </div>
               </div>
