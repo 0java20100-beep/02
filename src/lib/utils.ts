@@ -31,6 +31,14 @@ export function formatDate(date: Date | string): string {
   });
 }
 
+export function normalizeUrl(url: string | null | undefined): string | null {
+  if (!url || !url.trim()) return null;
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  if (trimmed.startsWith("/")) return trimmed;
+  return `https://${trimmed}`;
+}
+
 export const CATEGORY_LABELS: Record<string, string> = {
   LANDING_PAGE: "Landing Page",
   CORPORATE_WEBSITE: "Corporate Website",

@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Eye, ExternalLink } from "lucide-react";
-import { CATEGORY_LABELS } from "@/lib/utils";
+import { CATEGORY_LABELS, normalizeUrl } from "@/lib/utils";
 
 export interface ProjectCardData {
   id: string;
@@ -86,7 +86,7 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
           </span>
           {project.demoUrl && (
             <a
-              href={project.demoUrl}
+              href={normalizeUrl(project.demoUrl) || "#"}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-primary hover:underline"

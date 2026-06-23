@@ -17,7 +17,7 @@ import {
   inputCls,
 } from "@/components/admin/ui";
 import { MediaInput, MediaListInput } from "@/components/admin/MediaInput";
-import { CATEGORY_LABELS, formatDate } from "@/lib/utils";
+import { CATEGORY_LABELS, formatDate, normalizeUrl } from "@/lib/utils";
 
 interface Site {
   id: string;
@@ -157,7 +157,7 @@ export default function SitesAdminPage() {
               <div className="flex gap-2 shrink-0">
                 {s.demoUrl && (
                   <a
-                    href={s.demoUrl}
+                    href={normalizeUrl(s.demoUrl) || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="grid place-items-center h-9 w-9 rounded-lg glass card-hover"

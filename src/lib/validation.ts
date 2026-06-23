@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { normalizeUrl } from "@/lib/utils";
 
 export const loginSchema = z.object({
   username: z.string().min(1, "Введите логин"),
@@ -43,8 +44,8 @@ export const projectSchema = z.object({
   technologies: z.array(z.string()).default([]),
   coverImage: z.string().optional().nullable(),
   screenshots: z.array(z.string()).default([]),
-  demoUrl: z.string().optional().nullable(),
-  repoUrl: z.string().optional().nullable(),
+  demoUrl: z.string().optional().nullable().transform((v) => normalizeUrl(v)),
+  repoUrl: z.string().optional().nullable().transform((v) => normalizeUrl(v)),
   featured: z.boolean().default(false),
   order: z.number().int().default(0),
   seoTitle: z.string().optional().nullable(),

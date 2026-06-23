@@ -6,7 +6,7 @@ import { ArrowLeft, Calendar, Eye, ExternalLink, Send } from "lucide-react";
 import { getProjectBySlug } from "@/lib/data";
 import { ProjectGallery } from "@/components/site/ProjectGallery";
 import { ViewTracker } from "@/components/site/ViewTracker";
-import { CATEGORY_LABELS, formatDate } from "@/lib/utils";
+import { CATEGORY_LABELS, formatDate, normalizeUrl } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -72,7 +72,7 @@ export default async function ProjectDetailPage({
         <div className="mt-6 flex flex-wrap gap-3">
           {project.demoUrl && (
             <a
-              href={project.demoUrl}
+              href={normalizeUrl(project.demoUrl) || "#"}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-primary to-secondary btn-glow"

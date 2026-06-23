@@ -5,7 +5,7 @@ import { ExternalLink, Eye, Calendar, Globe } from "lucide-react";
 import { getUploadedSites } from "@/lib/data";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
-import { CATEGORY_LABELS, formatDate } from "@/lib/utils";
+import { CATEGORY_LABELS, formatDate, normalizeUrl } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +35,7 @@ export default async function SitesPage() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {sites.map((s, i) => {
-              const demo = s.demoUrl || `${s.uploadedSite?.storagePath}/${s.uploadedSite?.entryFile}`;
+              const demo = normalizeUrl(s.demoUrl) || `${s.uploadedSite?.storagePath}/${s.uploadedSite?.entryFile}`;
               return (
                 <Reveal key={s.id} delay={i * 0.06}>
                   <div className="group glass rounded-2xl overflow-hidden card-hover h-full flex flex-col">
