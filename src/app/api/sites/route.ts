@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
         technologies,
         coverImage,
         screenshots,
-        demoUrl: `${extracted.storagePath}/${extracted.entryFile}`,
+        demoUrl: extracted.demoUrl,
         publishedAt: new Date(),
         uploadedSite: {
           create: {

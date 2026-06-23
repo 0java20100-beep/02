@@ -1,12 +1,15 @@
 import { NextRequest } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { put } from "@vercel/blob";
 import { ok, fail, handleError } from "@/lib/api";
 import { rateLimit } from "@/lib/rate-limit";
 import { ensureDir, UPLOADS_DIR } from "@/lib/storage";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
+
+const USE_BLOB = !!process.env.BLOB_READ_WRITE_TOKEN;
 
 // Public order-brief attachments. Strictly limited & validated — this is NOT a
 // publishing endpoint; visitors cannot publish sites, only attach brief files.
@@ -37,9 +40,6 @@ export async function POST(req: NextRequest) {
       .slice(0, MAX_FILES);
     if (files.length === 0) return fail("Файл не найден", 400);
 
-    const dir = path.join(UPLOADS_DIR, "orders");
-    await ensureDir(dir);
-
     const urls: string[] = [];
     for (const file of files) {
       if (!ALLOWED.has(file.type)) {
@@ -55,8 +55,19 @@ export async function POST(req: NextRequest) {
         .toString(36)
         .slice(2, 8)}.${ext}`;
       const buffer = Buffer.from(await file.arrayBuffer());
-      await fs.writeFile(path.join(dir, filename), buffer);
-      urls.push(`/uploads/orders/${filename}`);
+
+      if (USE_BLOB) {
+        const blob = await put(`uploads/orders/${filename}`, buffer, {
+          access: "public",
+          contentType: file.type,
+        });
+        urls.push(blob.url);
+      } else {
+        const dir = path.join(UPLOADS_DIR, "orders");
+        await ensureDir(dir);
+        await fs.writeFile(path.join(dir, filename), buffer);
+        urls.push(`/uploads/orders/${filename}`);
+      }
     }
 
     return ok({ urls });
