@@ -1,0 +1,213 @@
+// NAVIX — Prisma schema
+// PostgreSQL database for the NAVIX digital agency platform.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+}
+
+enum ProjectStatus {
+  PUBLISHED
+  DRAFT
+  HIDDEN
+}
+
+enum ProjectCategory {
+  LANDING_PAGE
+  CORPORATE_WEBSITE
+  ECOMMERCE
+  WEB_APPLICATION
+  DASHBOARD
+  SAAS
+}
+
+enum OrderStatus {
+  NEW
+  IN_PROGRESS
+  CONTACTED
+  DONE
+  REJECTED
+}
+
+enum SiteType {
+  ZIP
+  STATIC
+  REACT
+  NEXTJS
+}
+
+model User {
+  id                String   @id @default(cuid())
+  username          String   @unique
+  email            String?  @unique
+  passwordHash      String
+  role              Role     @default(ADMIN)
+  mustChangePassword Boolean @default(true)
+  lastLoginAt       DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  auditLogs AuditLog[]
+
+  @@map("users")
+}
+
+model Project {
+  id          String          @id @default(cuid())
+  slug        String          @unique
+  title       String
+  description String
+  content     String?         // long rich description
+  category    ProjectCategory @default(LANDING_PAGE)
+  status      ProjectStatus   @default(PUBLISHED)
+  technologies String[]       @default([])
+  coverImage  String?
+  screenshots String[]        @default([])
+  demoUrl     String?
+  repoUrl     String?
+  featured    Boolean         @default(false)
+  views       Int             @default(0)
+  order       Int             @default(0)
+
+  // SEO
+  seoTitle       String?
+  seoDescription String?
+  seoKeywords    String?
+  ogImage        String?
+
+  uploadedSite   UploadedSite?
+
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@map("projects")
+}
+
+model UploadedSite {
+  id         String   @id @default(cuid())
+  projectId  String   @unique
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type       SiteType @default(STATIC)
+  storagePath String  // directory under public/sites/<slug>
+  entryFile  String   @default("index.html")
+  sizeBytes  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("uploaded_sites")
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  name        String
+  phone       String
+  telegram    String?
+  email       String?
+  projectType String
+  description String
+  budget      String?
+  deadline    String?
+  files       String[]    @default([])
+  status      OrderStatus @default(NEW)
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([status])
+  @@map("orders")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  name      String
+  company   String?
+  avatar    String?
+  rating    Int      @default(5)
+  text      String
+  published Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("reviews")
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  type      String   // telegram, instagram, phone, email, card, address, custom
+  label     String
+  value     String
+  icon      String?
+  order     Int      @default(0)
+  visible   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contacts")
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}
+
+model Analytics {
+  id        String   @id @default(cuid())
+  date      DateTime @default(now())
+  path      String
+  event     String   @default("pageview") // pageview, project_view, order, visitor
+  referrer  String?
+  sessionId String?
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  @@index([event])
+  @@index([date])
+  @@map("analytics")
+}
+
+model Media {
+  id         String   @id @default(cuid())
+  filename   String
+  url        String
+  mimeType   String
+  sizeBytes  Int      @default(0)
+  width      Int?
+  height     Int?
+  createdAt  DateTime @default(now())
+
+  @@map("media")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String?
+  entityId  String?
+  meta      Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([action])
+  @@map("audit_logs")
+}
