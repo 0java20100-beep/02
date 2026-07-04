@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { MapPin, Phone, Clock, Send, MessageCircle, Share2 } from "lucide-react";
+import { useMenu } from "@/context/menu-provider";
 
 export function Footer() {
+  const { settings } = useMenu();
   return (
     <footer className="relative mt-24 overflow-hidden border-t border-gold/20 bg-emerald-700 text-emerald-50">
       <div className="absolute inset-0 bg-ornament [background-size:24px_24px] opacity-40" />
@@ -13,7 +17,7 @@ export function Footer() {
                 S
               </span>
               <span className="font-display text-2xl font-bold">
-                Sharq<span className="text-gradient-gold">ona</span>
+                {settings.name}
               </span>
             </div>
             <p className="mt-4 max-w-xs text-sm text-emerald-100/80">
@@ -64,15 +68,15 @@ export function Footer() {
             <ul className="mt-4 space-y-3 text-sm text-emerald-100/80">
               <li className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-300" />
-                Toshkent sh., Amir Temur ko&apos;chasi 12
+                {settings.address}
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4 shrink-0 text-gold-300" />
-                +998 71 200 00 00
+                {settings.phone}
               </li>
               <li className="flex items-center gap-2">
                 <Clock className="h-4 w-4 shrink-0 text-gold-300" />
-                Har kuni 10:00 — 23:00
+                {settings.hours}
               </li>
             </ul>
           </div>
@@ -104,7 +108,7 @@ export function Footer() {
 
         <div className="mt-12 gold-divider" />
         <div className="mt-6 flex flex-col items-center justify-between gap-3 text-xs text-emerald-100/70 sm:flex-row">
-          <p>© {new Date().getFullYear()} Sharqona. Barcha huquqlar himoyalangan.</p>
+          <p>© {new Date().getFullYear()} {settings.name}. Barcha huquqlar himoyalangan.</p>
           <p>Toshkent · O&apos;zbekiston</p>
         </div>
       </div>

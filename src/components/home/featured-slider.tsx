@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
-import { getPopularDishes } from "@/data/menu";
+import { useMenu } from "@/context/menu-provider";
 import { formatSom } from "@/lib/utils";
 import { useCart } from "@/context/cart-provider";
 import { DishImage } from "@/components/ui/dish-image";
@@ -11,24 +11,39 @@ import { Rating } from "@/components/ui/rating";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { RippleButton } from "@/components/ui/ripple-button";
 
-const slides = getPopularDishes();
+const slideVariants = {
+  enter: (custom: number) => ({ opacity: 0, x: custom * 60 }),
+  center: { opacity: 1, x: 0 },
+  exit: (custom: number) => ({ opacity: 0, x: custom * -60 }),
+};
 
 export function FeaturedSlider() {
   const { addItem, openCart } = useCart();
+  const { popularDishes: slides } = useMenu();
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
 
-  const paginate = useCallback((dir: number) => {
-    setDirection(dir);
-    setIndex((prev) => (prev + dir + slides.length) % slides.length);
-  }, []);
+  const paginate = useCallback(
+    (dir: number) => {
+      setDirection(dir);
+      setIndex((prev) => (prev + dir + slides.length) % slides.length);
+    },
+    [slides.length],
+  );
 
   useEffect(() => {
+    if (slides.length <= 1) return;
     const t = setInterval(() => paginate(1), 5000);
     return () => clearInterval(t);
-  }, [paginate]);
+  }, [paginate, slides.length]);
 
-  const dish = slides[index];
+  useEffect(() => {
+    if (index >= slides.length && slides.length > 0) setIndex(0);
+  }, [index, slides.length]);
+
+  if (slides.length === 0) return null;
+
+  const dish = slides[Math.min(index, slides.length - 1)];
 
   return (
     <section className="relative py-24">
@@ -44,9 +59,10 @@ export function FeaturedSlider() {
             <motion.div
               key={dish.id}
               custom={direction}
-              initial={{ opacity: 0, x: direction * 60 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: direction * -60 }}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="grid md:grid-cols-2"
             >

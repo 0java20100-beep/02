@@ -4,20 +4,18 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { Dish } from "@/lib/types";
-import { getPopularDishes, categories } from "@/data/menu";
+import { useMenu } from "@/context/menu-provider";
 import { DishCard } from "@/components/menu/dish-card";
 import { DishModal } from "@/components/menu/dish-modal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { RippleButton } from "@/components/ui/ripple-button";
 
-const popular = getPopularDishes();
-
-function emojiFor(categoryId: string) {
-  return categories.find((c) => c.id === categoryId)?.emoji;
-}
-
 export function PopularDishes() {
   const [selected, setSelected] = useState<Dish | null>(null);
+  const { popularDishes: popular, categories } = useMenu();
+
+  const emojiFor = (categoryId: string) =>
+    categories.find((c) => c.id === categoryId)?.emoji;
 
   return (
     <section className="relative py-24">

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import type { Dish } from "@/lib/types";
-import { categories, dishes } from "@/data/menu";
+import { useMenu } from "@/context/menu-provider";
 import { DishCard } from "./dish-card";
 import { DishModal } from "./dish-modal";
 import { cn } from "@/lib/utils";
@@ -18,15 +18,15 @@ const sortOptions: { key: SortKey; label: string }[] = [
   { key: "price-desc", label: "Qimmat" },
 ];
 
-function emojiFor(categoryId: string) {
-  return categories.find((c) => c.id === categoryId)?.emoji;
-}
-
 export function MenuView() {
+  const { dishes, categories } = useMenu();
   const [active, setActive] = useState<string>("all");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortKey>("popular");
   const [selected, setSelected] = useState<Dish | null>(null);
+
+  const emojiFor = (categoryId: string) =>
+    categories.find((c) => c.id === categoryId)?.emoji;
 
   const filtered = useMemo(() => {
     let list = dishes;
@@ -57,7 +57,7 @@ export function MenuView() {
         );
     }
     return sorted;
-  }, [active, query, sort]);
+  }, [dishes, active, query, sort]);
 
   return (
     <div className="mx-auto max-w-7xl px-4">

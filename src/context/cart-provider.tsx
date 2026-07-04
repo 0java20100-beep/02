@@ -7,19 +7,10 @@ import {
   useCallback,
   useMemo,
   useEffect,
+  useRef,
 } from "react";
-import type { CartItem, Dish } from "@/lib/types";
-
-interface PromoCode {
-  code: string;
-  discountPercent: number;
-}
-
-const PROMO_CODES: PromoCode[] = [
-  { code: "SHARQONA10", discountPercent: 10 },
-  { code: "PALOV20", discountPercent: 20 },
-  { code: "VIP15", discountPercent: 15 },
-];
+import type { CartItem, Dish, PromoCode } from "@/lib/types";
+import { useMenu } from "@/context/menu-provider";
 
 interface CartContextValue {
   items: CartItem[];
@@ -48,6 +39,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [promo, setPromo] = useState<PromoCode | null>(null);
   const [promoError, setPromoError] = useState<string | null>(null);
+  const { promos } = useMenu();
+  const isInitialized = useRef(false);
 
   useEffect(() => {
     const stored = window.localStorage.getItem("sharqona-cart");
@@ -58,9 +51,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         /* ignore corrupt cart */
       }
     }
+    isInitialized.current = true;
   }, []);
 
   useEffect(() => {
+    if (!isInitialized.current) return;
     window.localStorage.setItem("sharqona-cart", JSON.stringify(items));
   }, [items]);
 
@@ -107,18 +102,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const openCart = useCallback(() => setIsOpen(true), []);
   const closeCart = useCallback(() => setIsOpen(false), []);
 
-  const applyPromo = useCallback((code: string) => {
-    const found = PROMO_CODES.find(
-      (p) => p.code.toLowerCase() === code.trim().toLowerCase(),
-    );
-    if (found) {
-      setPromo(found);
-      setPromoError(null);
-    } else {
-      setPromo(null);
-      setPromoError("Promo kod noto'g'ri");
-    }
-  }, []);
+  const applyPromo = useCallback(
+    (code: string) => {
+      const found = promos.find(
+        (p) => p.code.toLowerCase() === code.trim().toLowerCase(),
+      );
+      if (found) {
+        setPromo(found);
+        setPromoError(null);
+      } else {
+        setPromo(null);
+        setPromoError("Promo kod noto'g'ri");
+      }
+    },
+    [promos],
+  );
 
   const removePromo = useCallback(() => {
     setPromo(null);

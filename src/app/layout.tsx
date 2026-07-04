@@ -3,10 +3,7 @@ import localFont from "next/font/local";
 import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
-import { CartDrawer } from "@/components/cart/cart-drawer";
-import { FloatingActions } from "@/components/layout/floating-actions";
+import { SiteFrame } from "@/components/layout/site-frame";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -79,11 +76,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} font-sans antialiased`}
       >
         <Providers>
-          <Navbar />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
-          <CartDrawer />
-          <FloatingActions />
+          <SiteFrame>{children}</SiteFrame>
         </Providers>
       </body>
     </html>

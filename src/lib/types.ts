@@ -25,6 +25,19 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface PromoCode {
+  code: string;
+  discountPercent: number;
+}
+
+export interface RestaurantSettings {
+  name: string;
+  tagline: string;
+  phone: string;
+  address: string;
+  hours: string;
+}
+
 export type OrderStatus = "pending" | "cooking" | "ready" | "delivered";
 
 export interface Testimonial {

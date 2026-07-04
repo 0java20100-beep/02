@@ -2,17 +2,18 @@
 
 import { motion } from "framer-motion";
 import { Plus, Quote } from "lucide-react";
-import { getChefPicks } from "@/data/menu";
+import { useMenu } from "@/context/menu-provider";
 import { formatSom } from "@/lib/utils";
 import { useCart } from "@/context/cart-provider";
 import { DishImage } from "@/components/ui/dish-image";
 import { Rating } from "@/components/ui/rating";
 import { Reveal } from "@/components/ui/reveal";
 
-const picks = getChefPicks();
-
 export function ChefPick() {
   const { addItem, openCart } = useCart();
+  const { chefPicks: picks } = useMenu();
+
+  if (picks.length === 0) return null;
 
   return (
     <section className="relative overflow-hidden py-24">
