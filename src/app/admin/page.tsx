@@ -6,31 +6,40 @@ import {
   Tags,
   Ticket,
   Star,
-  ChefHat,
+  ClipboardList,
   QrCode,
   Settings as SettingsIcon,
 } from "lucide-react";
 import { useMenu } from "@/context/menu-provider";
+import { useOrder } from "@/context/order-provider";
 import { PageHeader, Card } from "@/components/admin/ui";
 import { formatSom } from "@/lib/utils";
 
 export default function AdminDashboard() {
-  const { dishes, categories, promos, popularDishes, chefPicks, settings } =
-    useMenu();
+  const { dishes, categories, promos, popularDishes, settings } = useMenu();
+  const { orders } = useOrder();
 
   const avgPrice = dishes.length
     ? Math.round(dishes.reduce((s, d) => s + d.price, 0) / dishes.length)
     : 0;
 
+  const activeOrders = orders.filter((o) => o.status !== "delivered").length;
+
   const stats = [
+    { label: "Faol zakazlar", value: activeOrders, icon: ClipboardList },
     { label: "Taomlar", value: dishes.length, icon: UtensilsCrossed },
     { label: "Kategoriyalar", value: categories.length, icon: Tags },
     { label: "Promo kodlar", value: promos.length, icon: Ticket },
     { label: "Mashhur", value: popularDishes.length, icon: Star },
-    { label: "Chef tavsiyasi", value: chefPicks.length, icon: ChefHat },
   ];
 
   const links = [
+    {
+      href: "/admin/orders",
+      label: "Zakazlar",
+      desc: "Kelgan buyurtmalar va holati",
+      icon: ClipboardList,
+    },
     {
       href: "/admin/menu",
       label: "Menu / Taomlar",

@@ -25,6 +25,8 @@ interface OrderContextValue {
   orders: Order[];
   activeOrder: Order | null;
   placeOrder: (items: CartItem[], total: number) => Order;
+  updateOrderStatus: (orderId: string, status: OrderStatus) => void;
+  clearOrders: () => void;
   waiterCalled: boolean;
   callWaiter: () => void;
   resetWaiter: () => void;
@@ -35,6 +37,7 @@ interface OrderContextValue {
 const OrderContext = createContext<OrderContextValue | undefined>(undefined);
 
 const STATUS_FLOW: OrderStatus[] = ["pending", "cooking", "ready", "delivered"];
+const ORDERS_KEY = "sharqona-orders";
 
 export function OrderProvider({ children }: { children: React.ReactNode }) {
   const [tableNumber, setTableNumberState] = useState<number>(1);
@@ -42,11 +45,27 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
   const [waiterCalled, setWaiterCalled] = useState(false);
   const [billRequested, setBillRequested] = useState(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const ordersLoaded = useRef(false);
 
   useEffect(() => {
     const stored = window.localStorage.getItem("sharqona-table");
     if (stored) setTableNumberState(Number(stored));
+
+    const storedOrders = window.localStorage.getItem(ORDERS_KEY);
+    if (storedOrders) {
+      try {
+        setOrders(JSON.parse(storedOrders) as Order[]);
+      } catch {
+        /* ignore corrupt orders */
+      }
+    }
+    ordersLoaded.current = true;
   }, []);
+
+  useEffect(() => {
+    if (!ordersLoaded.current) return;
+    window.localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  }, [orders]);
 
   useEffect(() => {
     const pending = timers.current;
@@ -92,6 +111,17 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
     [tableNumber, advanceStatus],
   );
 
+  const updateOrderStatus = useCallback(
+    (orderId: string, status: OrderStatus) => {
+      setOrders((prev) =>
+        prev.map((o) => (o.id === orderId ? { ...o, status } : o)),
+      );
+    },
+    [],
+  );
+
+  const clearOrders = useCallback(() => setOrders([]), []);
+
   const callWaiter = useCallback(() => {
     setWaiterCalled(true);
     const t = setTimeout(() => setWaiterCalled(false), 10000);
@@ -112,6 +142,8 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         orders,
         activeOrder,
         placeOrder,
+        updateOrderStatus,
+        clearOrders,
         waiterCalled,
         callWaiter,
         resetWaiter,
