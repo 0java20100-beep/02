@@ -3,6 +3,7 @@ import { updateOrder, deleteOrder } from "@/lib/store";
 import type { OrderStatus } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 export const runtime = "nodejs";
 
 const VALID: OrderStatus[] = ["pending", "cooking", "ready", "delivered"];

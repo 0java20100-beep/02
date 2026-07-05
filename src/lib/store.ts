@@ -1,4 +1,5 @@
 import { list, put, del } from "@vercel/blob";
+import { unstable_noStore as noStore } from "next/cache";
 import type { Order, Expense } from "@/lib/types";
 
 /**
@@ -13,6 +14,7 @@ export type StoredOrder = Order;
 export type StoredExpense = Expense;
 
 async function readAll<T>(prefix: string): Promise<T[]> {
+  noStore();
   const { blobs } = await list({ prefix, token, limit: 1000 });
   const items = await Promise.all(
     blobs.map(async (b) => {
@@ -34,16 +36,19 @@ async function writeItem(pathname: string, data: unknown): Promise<void> {
     contentType: "application/json",
     addRandomSuffix: false,
     allowOverwrite: true,
+    cacheControlMaxAge: 0,
     token,
   });
 }
 
 async function removeByPrefix(prefix: string): Promise<void> {
+  noStore();
   const { blobs } = await list({ prefix, token, limit: 1000 });
   if (blobs.length) await del(blobs.map((b) => b.url), { token });
 }
 
 async function removeOne(prefix: string, id: string): Promise<void> {
+  noStore();
   const { blobs } = await list({ prefix, token, limit: 1000 });
   const target = blobs.find((b) => b.pathname === `${prefix}${id}.json`);
   if (target) await del(target.url, { token });

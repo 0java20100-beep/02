@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { deleteExpense } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 export const runtime = "nodejs";
 
 export async function DELETE(

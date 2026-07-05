@@ -4,6 +4,7 @@ import type { StoredOrder } from "@/lib/store";
 import type { CartItem } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 export const runtime = "nodejs";
 
 export async function GET() {

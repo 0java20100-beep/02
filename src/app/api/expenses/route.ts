@@ -3,6 +3,7 @@ import { getExpenses, saveExpense } from "@/lib/store";
 import type { StoredExpense } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 export const runtime = "nodejs";
 
 export async function GET() {
