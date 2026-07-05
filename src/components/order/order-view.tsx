@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   QrCode,
   UtensilsCrossed,
   ReceiptText,
   BellRing,
   Check,
+  PartyPopper,
 } from "lucide-react";
 import { useOrder } from "@/context/order-provider";
 import { formatSom } from "@/lib/utils";
@@ -23,7 +24,7 @@ export function OrderView() {
     tableNumber,
     setTableNumber,
     activeOrder,
-    orders,
+    myOrders,
     callWaiter,
     waiterCalled,
     requestBill,
@@ -36,6 +37,25 @@ export function OrderView() {
       setTableNumber(Number(t));
     }
   }, [params, setTableNumber]);
+
+  // Notify (vibrate) once when the active order becomes ready.
+  const prevStatus = useRef<string | null>(null);
+  useEffect(() => {
+    const status = activeOrder?.status ?? null;
+    if (
+      status === "ready" &&
+      prevStatus.current &&
+      prevStatus.current !== "ready" &&
+      typeof navigator !== "undefined" &&
+      "vibrate" in navigator
+    ) {
+      navigator.vibrate?.([200, 100, 200]);
+    }
+    prevStatus.current = status;
+  }, [activeOrder?.status]);
+
+  const isReady = activeOrder?.status === "ready";
+  const isDelivered = activeOrder?.status === "delivered";
 
   return (
     <div className="mx-auto max-w-4xl px-4">
@@ -63,6 +83,41 @@ export function OrderView() {
 
       {activeOrder ? (
         <div className="space-y-8">
+          <AnimatePresence>
+            {(isReady || isDelivered) && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10 }}
+                className={
+                  isReady
+                    ? "flex items-center gap-4 rounded-3xl border border-gold/40 bg-gradient-to-br from-gold/20 to-gold/5 p-5 shadow-glow-sm"
+                    : "flex items-center gap-4 rounded-3xl border border-emerald-500/40 bg-emerald-500/10 p-5"
+                }
+              >
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full btn-gold">
+                  {isReady ? (
+                    <PartyPopper className="h-6 w-6" />
+                  ) : (
+                    <Check className="h-6 w-6" />
+                  )}
+                </div>
+                <div>
+                  <p className="font-display text-lg font-bold">
+                    {isReady
+                      ? "Buyurtmangiz tayyor! 🎉"
+                      : "Buyurtma yetkazildi"}
+                  </p>
+                  <p className="text-sm text-muted">
+                    {isReady
+                      ? "Ofitsiant tez orada stolingizga olib keladi."
+                      : "Yoqimli ishtaha! Rahmat."}
+                  </p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -160,13 +215,13 @@ export function OrderView() {
             </Link>
           </div>
 
-          {orders.length > 1 && (
+          {myOrders.length > 1 && (
             <section className="rounded-3xl glass p-6 shadow-soft">
               <h3 className="mb-4 font-display text-lg font-bold">
                 Oldingi buyurtmalar
               </h3>
               <div className="space-y-2">
-                {orders.slice(1).map((o) => (
+                {myOrders.slice(1).map((o) => (
                   <div
                     key={o.id}
                     className="flex items-center justify-between rounded-2xl border border-border px-4 py-3 text-sm"

@@ -1,7 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Clock, ChefHat, Package, Truck, Trash2, RefreshCw } from "lucide-react";
+import {
+  Clock,
+  ChefHat,
+  Package,
+  Truck,
+  Trash2,
+  RefreshCw,
+  Wallet,
+} from "lucide-react";
 import { useOrder } from "@/context/order-provider";
 import type { OrderStatus } from "@/lib/types";
 import { PageHeader, Card, Button } from "@/components/admin/ui";
@@ -53,7 +61,8 @@ const timeFmt = (ts: number) =>
 type Filter = "all" | "active" | OrderStatus;
 
 export default function AdminOrdersPage() {
-  const { orders, updateOrderStatus, clearOrders } = useOrder();
+  const { orders, updateOrderStatus, setPaid, clearOrders, refresh, loading } =
+    useOrder();
   const [filter, setFilter] = useState<Filter>("all");
 
   const activeCount = orders.filter((o) => o.status !== "delivered").length;
@@ -81,17 +90,25 @@ export default function AdminOrdersPage() {
         title="Zakazlar"
         subtitle="Kelgan buyurtmalar — stol, holati va summasi"
         action={
-          orders.length > 0 ? (
-            <Button
-              variant="danger"
-              onClick={() => {
-                if (confirm("Barcha buyurtmalar tarixi o'chirilsinmi?"))
-                  clearOrders();
-              }}
-            >
-              <Trash2 className="h-4 w-4" /> Tarixni tozalash
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => refresh()}>
+              <RefreshCw
+                className={cn("h-4 w-4", loading && "animate-spin")}
+              />{" "}
+              Yangilash
             </Button>
-          ) : undefined
+            {orders.length > 0 && (
+              <Button
+                variant="danger"
+                onClick={() => {
+                  if (confirm("Barcha buyurtmalar tarixi o'chirilsinmi?"))
+                    clearOrders();
+                }}
+              >
+                <Trash2 className="h-4 w-4" /> Tarixni tozalash
+              </Button>
+            )}
+          </div>
         }
       />
 
@@ -143,6 +160,12 @@ export default function AdminOrdersPage() {
                         <StatusIcon className="h-3.5 w-3.5" />
                         {meta.label}
                       </span>
+                      {order.paid && (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-500">
+                          <Wallet className="h-3.5 w-3.5" />
+                          To&apos;langan
+                        </span>
+                      )}
                     </div>
                     <p className="mt-1 text-xs text-muted">
                       {order.id} · {timeFmt(order.createdAt)} · {count} ta taom
@@ -188,6 +211,18 @@ export default function AdminOrdersPage() {
                       {s.label}
                     </button>
                   ))}
+                  <button
+                    onClick={() => setPaid(order.id, !order.paid)}
+                    className={cn(
+                      "ml-auto inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                      order.paid
+                        ? "bg-emerald-500/15 text-emerald-500"
+                        : "border border-border text-muted hover:border-gold hover:text-gold-400",
+                    )}
+                  >
+                    <Wallet className="h-3.5 w-3.5" />
+                    {order.paid ? "To'langan ✓" : "To'landi deb belgilash"}
+                  </button>
                 </div>
               </Card>
             );
@@ -199,10 +234,10 @@ export default function AdminOrdersPage() {
         <p className="flex items-start gap-2">
           <RefreshCw className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
           <span>
-            <strong className="text-foreground">Eslatma:</strong> Hozircha
-            backend yo&apos;q — buyurtmalar shu brauzerda (localStorage)
-            saqlanadi. Mijozning telefonida berilgan buyurtma bu yerga global
-            tushishi uchun keyingi bosqichda backend ulanadi.
+            <strong className="text-foreground">Real vaqtda:</strong>{" "}
+            buyurtmalar umumiy bazada saqlanadi — istalgan telefondan QR orqali
+            berilgan zakaz shu yerda avtomatik ko&apos;rinadi (har 7 soniyada
+            yangilanadi).
           </span>
         </p>
       </div>

@@ -32,9 +32,17 @@ export function CartDrawer() {
   const { placeOrder, tableNumber } = useOrder();
   const [promoInput, setPromoInput] = useState("");
 
-  const handleCheckout = () => {
-    if (items.length === 0) return;
-    placeOrder(items, total);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleCheckout = async () => {
+    if (items.length === 0 || submitting) return;
+    setSubmitting(true);
+    const order = await placeOrder(items, total);
+    setSubmitting(false);
+    if (!order) {
+      alert("Buyurtma yuborilmadi. Internet aloqasini tekshiring va qayta urining.");
+      return;
+    }
     clearCart();
     closeCart();
     router.push("/order");
@@ -210,8 +218,12 @@ export function CartDrawer() {
                     </div>
                   </div>
 
-                  <RippleButton onClick={handleCheckout} className="w-full">
-                    Buyurtmani yuborish
+                  <RippleButton
+                    onClick={handleCheckout}
+                    disabled={submitting}
+                    className="w-full"
+                  >
+                    {submitting ? "Yuborilmoqda…" : "Buyurtmani yuborish"}
                   </RippleButton>
                 </div>
               </>

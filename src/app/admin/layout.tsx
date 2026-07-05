@@ -12,6 +12,7 @@ import {
   Settings as SettingsIcon,
   QrCode,
   ClipboardList,
+  BarChart3,
   LogOut,
   Lock,
   ExternalLink,
@@ -24,6 +25,7 @@ const AUTH_KEY = "sharqona-admin-auth";
 const nav = [
   { href: "/admin", label: "Boshqaruv", icon: LayoutDashboard },
   { href: "/admin/orders", label: "Zakazlar", icon: ClipboardList },
+  { href: "/admin/hisobot", label: "Hisobot", icon: BarChart3 },
   { href: "/admin/menu", label: "Menu / Taomlar", icon: UtensilsCrossed },
   { href: "/admin/categories", label: "Kategoriyalar", icon: Tags },
   { href: "/admin/promos", label: "Promo kodlar", icon: Ticket },

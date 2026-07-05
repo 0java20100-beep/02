@@ -8,6 +8,8 @@ import {
   Star,
   ClipboardList,
   QrCode,
+  BarChart3,
+  TrendingUp,
   Settings as SettingsIcon,
 } from "lucide-react";
 import { useMenu } from "@/context/menu-provider";
@@ -16,7 +18,7 @@ import { PageHeader, Card } from "@/components/admin/ui";
 import { formatSom } from "@/lib/utils";
 
 export default function AdminDashboard() {
-  const { dishes, categories, promos, popularDishes, settings } = useMenu();
+  const { dishes, promos, popularDishes, settings } = useMenu();
   const { orders } = useOrder();
 
   const avgPrice = dishes.length
@@ -24,11 +26,14 @@ export default function AdminDashboard() {
     : 0;
 
   const activeOrders = orders.filter((o) => o.status !== "delivered").length;
+  const income = orders
+    .filter((o) => o.paid)
+    .reduce((s, o) => s + o.total, 0);
 
   const stats = [
     { label: "Faol zakazlar", value: activeOrders, icon: ClipboardList },
+    { label: "Kirim (to'langan)", value: formatSom(income), icon: TrendingUp },
     { label: "Taomlar", value: dishes.length, icon: UtensilsCrossed },
-    { label: "Kategoriyalar", value: categories.length, icon: Tags },
     { label: "Promo kodlar", value: promos.length, icon: Ticket },
     { label: "Mashhur", value: popularDishes.length, icon: Star },
   ];
@@ -39,6 +44,12 @@ export default function AdminDashboard() {
       label: "Zakazlar",
       desc: "Kelgan buyurtmalar va holati",
       icon: ClipboardList,
+    },
+    {
+      href: "/admin/hisobot",
+      label: "Hisobot",
+      desc: "Kirim / chiqim, savdo va foyda",
+      icon: BarChart3,
     },
     {
       href: "/admin/menu",
@@ -123,10 +134,12 @@ export default function AdminDashboard() {
 
       <div className="mt-10 rounded-2xl border border-gold/30 bg-gold/5 p-5 text-sm text-muted">
         <p>
-          <strong className="text-foreground">Eslatma:</strong> Hozircha barcha
-          o&apos;zgarishlar shu brauzerda (localStorage) saqlanadi. Boshqa
-          qurilmalarga global ko&apos;rinishi uchun keyingi bosqichda backend
-          ulanadi.
+          <strong className="text-foreground">Eslatma:</strong>{" "}
+          <strong className="text-foreground">Zakazlar</strong> va{" "}
+          <strong className="text-foreground">Hisobot</strong> umumiy bazada
+          saqlanadi — istalgan telefondan berilgan buyurtma barcha
+          qurilmalarda ko&apos;rinadi. Menu va sozlamalar o&apos;zgarishlari
+          esa hozircha shu brauzerda (localStorage) saqlanadi.
         </p>
       </div>
     </div>

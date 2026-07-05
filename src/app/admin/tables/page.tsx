@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
 import { Download, QrCode as QrIcon, Printer } from "lucide-react";
 import { useMenu } from "@/context/menu-provider";
@@ -18,34 +18,61 @@ interface TableQr {
   dataUrl: string;
 }
 
+const CONFIG_KEY = "sharqona-qr-config";
+
 export default function AdminTablesPage() {
   const { settings } = useMenu();
   const [count, setCount] = useState(10);
   const [baseUrl, setBaseUrl] = useState("");
   const [qrs, setQrs] = useState<TableQr[]>([]);
   const [generating, setGenerating] = useState(false);
+  const autoRan = useRef(false);
 
+  const generate = useCallback(
+    async (n: number, origin: string) => {
+      const base = origin.replace(/\/$/, "");
+      const total = Math.max(1, Math.min(200, n));
+      setGenerating(true);
+      const results: TableQr[] = [];
+      for (let table = 1; table <= total; table++) {
+        const url = `${base}/order?table=${table}`;
+        const dataUrl = await QRCode.toDataURL(url, {
+          width: 480,
+          margin: 2,
+          color: { dark: "#07271b", light: "#ffffff" },
+        });
+        results.push({ table, url, dataUrl });
+      }
+      setQrs(results);
+      setGenerating(false);
+      window.localStorage.setItem(
+        CONFIG_KEY,
+        JSON.stringify({ count: total, baseUrl: base }),
+      );
+    },
+    [],
+  );
+
+  // Restore saved config and auto-generate so QR codes survive a page refresh.
   useEffect(() => {
-    if (typeof window !== "undefined") setBaseUrl(window.location.origin);
-  }, []);
-
-  const generate = async () => {
-    const origin = baseUrl.replace(/\/$/, "");
-    const n = Math.max(1, Math.min(200, count));
-    setGenerating(true);
-    const results: TableQr[] = [];
-    for (let table = 1; table <= n; table++) {
-      const url = `${origin}/order?table=${table}`;
-      const dataUrl = await QRCode.toDataURL(url, {
-        width: 480,
-        margin: 2,
-        color: { dark: "#07271b", light: "#ffffff" },
-      });
-      results.push({ table, url, dataUrl });
+    if (autoRan.current) return;
+    autoRan.current = true;
+    let savedCount = 10;
+    let savedBase = window.location.origin;
+    const stored = window.localStorage.getItem(CONFIG_KEY);
+    if (stored) {
+      try {
+        const cfg = JSON.parse(stored) as { count: number; baseUrl: string };
+        if (cfg.count) savedCount = cfg.count;
+        if (cfg.baseUrl) savedBase = cfg.baseUrl;
+      } catch {
+        /* ignore */
+      }
     }
-    setQrs(results);
-    setGenerating(false);
-  };
+    setCount(savedCount);
+    setBaseUrl(savedBase);
+    generate(savedCount, savedBase);
+  }, [generate]);
 
   const download = (qr: TableQr) => {
     const a = document.createElement("a");
@@ -114,7 +141,10 @@ export default function AdminTablesPage() {
           kodlarni qayta yarating.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Button onClick={generate} disabled={generating}>
+          <Button
+            onClick={() => generate(count, baseUrl)}
+            disabled={generating}
+          >
             <QrIcon className="h-4 w-4" />
             {generating ? "Yaratilmoqda..." : "QR kod yaratish"}
           </Button>

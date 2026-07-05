@@ -40,6 +40,24 @@ export interface RestaurantSettings {
 
 export type OrderStatus = "pending" | "cooking" | "ready" | "delivered";
 
+export interface Order {
+  id: string;
+  tableNumber: number;
+  items: CartItem[];
+  total: number;
+  status: OrderStatus;
+  createdAt: number;
+  paid?: boolean;
+}
+
+export interface Expense {
+  id: string;
+  title: string;
+  amount: number;
+  category: string;
+  createdAt: number;
+}
+
 export interface Testimonial {
   id: string;
   name: string;
