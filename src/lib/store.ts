@@ -19,7 +19,10 @@ async function readAll<T>(prefix: string): Promise<T[]> {
   const items = await Promise.all(
     blobs.map(async (b) => {
       try {
-        const res = await fetch(b.url, { cache: "no-store" });
+        // Cache-bust: Blob's CDN serves stale content at the same URL after an
+        // overwrite, so a unique query param forces a fresh read every time.
+        const bust = `${b.url}${b.url.includes("?") ? "&" : "?"}t=${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        const res = await fetch(bust, { cache: "no-store" });
         if (!res.ok) return null;
         return (await res.json()) as T;
       } catch {
