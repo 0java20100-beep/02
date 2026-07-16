@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { ArrowRight, QrCode, Star } from "lucide-react";
 import { RippleButton } from "@/components/ui/ripple-button";
 import { DishImage } from "@/components/ui/dish-image";
+import { LogoMark } from "@/components/layout/logo";
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -51,6 +52,14 @@ export function Hero() {
 
       <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-4 py-16 md:grid-cols-2">
         <motion.div style={{ y, opacity }} className="text-emerald-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            className="mb-6"
+          >
+            <LogoMark className="h-24 w-auto drop-shadow-[0_4px_24px_rgba(212,175,55,0.35)]" />
+          </motion.div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

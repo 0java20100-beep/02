@@ -42,6 +42,10 @@ export const metadata: Metadata = {
     "Sharqona",
   ],
   authors: [{ name: "Sharqona" }],
+  icons: {
+    icon: "/logo-mark.png",
+    apple: "/logo-mark.png",
+  },
   openGraph: {
     title: "Sharqona — Premium O'zbek Restorani",
     description:
@@ -50,11 +54,13 @@ export const metadata: Metadata = {
     siteName: "Sharqona",
     locale: "uz_UZ",
     type: "website",
+    images: [{ url: "/logo.png", width: 1158, height: 1280, alt: "Sharqona" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Sharqona — Premium O'zbek Restorani",
     description: "Milliy taomlar san'ati va zamonaviy hashamat.",
+    images: ["/logo.png"],
   },
   robots: { index: true, follow: true },
 };

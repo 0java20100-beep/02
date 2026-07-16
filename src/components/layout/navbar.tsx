@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Moon, Sun, Menu as MenuIcon, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LogoMark } from "@/components/layout/logo";
 import { useTheme } from "@/context/theme-provider";
 import { useCart } from "@/context/cart-provider";
 import { useOrder } from "@/context/order-provider";
@@ -49,9 +50,7 @@ export function Navbar() {
           )}
         >
           <Link href="/" className="group flex items-center gap-2.5">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full btn-gold font-display text-xl font-bold shadow-glow-sm">
-              S
-            </span>
+            <LogoMark className="h-10 w-auto transition-transform group-hover:scale-105" />
             <span className="font-display text-xl font-bold tracking-wide">
               Sharq<span className="text-gradient-gold">ona</span>
             </span>

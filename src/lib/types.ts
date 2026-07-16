@@ -58,6 +58,14 @@ export interface Expense {
   createdAt: number;
 }
 
+export interface MenuData {
+  dishes: Dish[];
+  categories: MenuCategory[];
+  promos: PromoCode[];
+  settings: RestaurantSettings;
+  updatedAt: number;
+}
+
 export interface Testimonial {
   id: string;
   name: string;

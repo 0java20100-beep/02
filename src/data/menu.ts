@@ -1,4 +1,10 @@
-import type { Dish, MenuCategory } from "@/lib/types";
+import type {
+  Dish,
+  MenuCategory,
+  MenuData,
+  PromoCode,
+  RestaurantSettings,
+} from "@/lib/types";
 
 export const categories: MenuCategory[] = [
   { id: "palov", name: "Palov", emoji: "🍚" },
@@ -505,4 +511,28 @@ export function getPopularDishes(): Dish[] {
 
 export function getChefPicks(): Dish[] {
   return dishes.filter((d) => d.chefPick);
+}
+
+export const DEFAULT_PROMOS: PromoCode[] = [
+  { code: "SHARQONA10", discountPercent: 10 },
+  { code: "PALOV20", discountPercent: 20 },
+  { code: "VIP15", discountPercent: 15 },
+];
+
+export const DEFAULT_SETTINGS: RestaurantSettings = {
+  name: "Sharqona",
+  tagline: "Milliy ta'm, zamonaviy hashamat",
+  phone: "+998 71 200 00 00",
+  address: "Toshkent sh., Amir Temur ko'chasi 12",
+  hours: "Har kuni 10:00 — 23:00",
+};
+
+export function defaultMenuData(): MenuData {
+  return {
+    dishes,
+    categories,
+    promos: DEFAULT_PROMOS,
+    settings: DEFAULT_SETTINGS,
+    updatedAt: 0,
+  };
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { MapPin, Phone, Clock, Send, MessageCircle, Share2 } from "lucide-react";
+import { LogoMark } from "@/components/layout/logo";
 import { useMenu } from "@/context/menu-provider";
 
 export function Footer() {
@@ -13,9 +14,7 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-4">
           <div>
             <div className="flex items-center gap-2.5">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full btn-gold font-display text-xl font-bold">
-                S
-              </span>
+              <LogoMark className="h-12 w-auto" />
               <span className="font-display text-2xl font-bold">
                 {settings.name}
               </span>

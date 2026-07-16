@@ -1,7 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Plus, Pencil, Trash2, Search, Star, ChefHat } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Search,
+  Star,
+  ChefHat,
+  Upload,
+} from "lucide-react";
 import type { Dish } from "@/lib/types";
 import { useMenu } from "@/context/menu-provider";
 import { formatSom } from "@/lib/utils";
@@ -225,9 +233,27 @@ function DishForm({
   const [ingredients, setIngredients] = useState(
     initial.ingredients.join(", "),
   );
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const set = <K extends keyof Dish>(key: K, value: Dish[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
+
+  const upload = async (file: File) => {
+    setUploading(true);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body });
+      const json = (await res.json()) as { url?: string; error?: string };
+      if (json.url) set("image", json.url);
+      else alert(json.error || "Rasm yuklanmadi");
+    } catch {
+      alert("Rasm yuklanmadi");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -281,12 +307,35 @@ function DishForm({
         </Field>
       </div>
 
-      <Field label="Rasm URL">
-        <TextInput
-          value={form.image}
-          onChange={(e) => set("image", e.target.value)}
-          placeholder="https://..."
-        />
+      <Field label="Rasm (yuklash yoki URL)">
+        <div className="flex gap-2">
+          <TextInput
+            value={form.image}
+            onChange={(e) => set("image", e.target.value)}
+            placeholder="https://... yoki rasm yuklang"
+          />
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) upload(f);
+              e.target.value = "";
+            }}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            className="shrink-0"
+          >
+            <Upload className="h-4 w-4" />
+            {uploading ? "Yuklanmoqda…" : "Yuklash"}
+          </Button>
+        </div>
       </Field>
       {form.image && (
         // eslint-disable-next-line @next/next/no-img-element

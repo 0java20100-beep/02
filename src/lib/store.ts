@@ -1,6 +1,6 @@
 import { list, put, del } from "@vercel/blob";
 import { unstable_noStore as noStore } from "next/cache";
-import type { Order, Expense } from "@/lib/types";
+import type { Order, Expense, MenuData } from "@/lib/types";
 
 /**
  * Blob-backed persistence. Each record is stored as its own JSON blob.
@@ -152,4 +152,19 @@ export async function deleteExpense(id: string): Promise<void> {
 
 export async function clearExpenses(): Promise<void> {
   await removeByPrefix(EXPENSES_PREFIX);
+}
+
+// ---- Menu data (dishes/categories/promos/settings — single mutable doc) ----
+// Stored versioned under `menu/config__<ts>.json` so admin edits are read
+// fresh on every device (same CDN-cache reasoning as orders).
+const MENU_PREFIX = "menu/";
+const MENU_ID = "config";
+
+export async function getMenuData(): Promise<MenuData | null> {
+  const items = await readVersioned<MenuData>(MENU_PREFIX);
+  return items[0] ?? null;
+}
+
+export async function saveMenuData(data: MenuData): Promise<void> {
+  await writeVersioned(MENU_PREFIX, MENU_ID, data);
 }

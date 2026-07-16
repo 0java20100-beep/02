@@ -14,10 +14,10 @@ import {
   ClipboardList,
   BarChart3,
   LogOut,
-  Lock,
   ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LogoMark } from "@/components/layout/logo";
 
 const ADMIN_PASSWORD = "Sharqona-2025";
 const AUTH_KEY = "sharqona-admin-auth";
@@ -57,8 +57,8 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
         onSubmit={submit}
         className="relative w-full max-w-sm rounded-3xl glass-strong p-8 text-emerald-50 shadow-card"
       >
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full btn-gold">
-          <Lock className="h-7 w-7" />
+        <div className="mx-auto mb-4 flex justify-center">
+          <LogoMark className="h-20 w-auto" />
         </div>
         <h1 className="text-center font-display text-2xl font-bold">
           Sharqona Admin
@@ -122,9 +122,7 @@ export default function AdminLayout({
           href="/admin"
           className="mb-0 flex shrink-0 items-center gap-2 px-2 md:mb-6"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-full btn-gold font-display font-bold">
-            S
-          </span>
+          <LogoMark className="h-9 w-auto" />
           <span className="hidden font-display text-lg font-bold md:block">
             Sharqona
           </span>
